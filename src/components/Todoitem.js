@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import ProtoTypes from 'prop-types';
+import PropTypes from 'prop-types';
 
 export class Todoitem extends Component {
     getStyles = () => {
@@ -25,7 +25,9 @@ export class Todoitem extends Component {
         )
     }
 }
-Todoitem.protoType = {
-    todo: ProtoTypes.object.isRequired
+Todoitem.propTypes = {
+    todo: PropTypes.object.isRequired,
+    markCompleted: PropTypes.func.isRequired,
+    deleteTodoItem: PropTypes.func.isRequired
 }
 export default Todoitem

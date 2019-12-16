@@ -1,8 +1,11 @@
 import React from 'react';
+import {BrowserRouter as Router, Route} from 'react-router-dom';
 import Header from './components/layout/Header';
 import Todo from './components/Todos';
 import AddTodo from './components/AddTodo';
-import uuid from 'uuid';
+import About from './components/about/About';
+import axios from 'axios';
+//import uuid from 'uuid';
 
 
 class App extends React.Component {
@@ -25,7 +28,13 @@ class App extends React.Component {
       }
     ]
   }
-
+  
+  componentDidMount(){
+    axios.get('https://jsonplaceholder.typicode.com/todos?_limit=10')
+  .then(res => this.setState({
+    todos: res.data
+  }));
+  }
   markCompleted = (id) => {
     this.setState({
       todos: this.state.todos.map((todo) => {
@@ -38,32 +47,48 @@ class App extends React.Component {
   }
 
   deleteTodoItem = (id) => {
-    this.setState({
+ 
+    axios.delete(`https://jsonplaceholder.typicode.com/todos/${id}`)
+    .then(res => this.setState({
       todos: [...this.state.todos.filter(todo => todo.id !== id)]
-    })
+    }))
+    
   }
   addTodo = (title) => {
-    const newTodo = {
-      id: uuid.v4(),
-      title, // title: title // 
+    // const newTodo = {
+    //   id: uuid.v4(),
+    //   title, // title: title // 
+    //   completed: false
+    // }
+    axios.post('https://jsonplaceholder.typicode.com/todos', {
+      title,
       completed: false
-    }
-    this.setState({
-      todos: [...this.state.todos, newTodo]
-    });
+    })
+    .then(res => this.setState({
+      todos: [...this.state.todos, res.data]
+    }));
+    
   }
   render() {
+    
+
     return (
+      <Router>
       <div>
         <Header />
-        <AddTodo addTodo={this.addTodo}/>
-        <Todo todos={this.state.todos}
-        markComplete={this.markCompleted}
-        deleteTodoItem={this.deleteTodoItem}
-        />   {/* todos is property like attribute in html element */}{/* rce */}
-
+        <Route exact path="/" render={props => 
+          (<React.Fragment>
+            <AddTodo addTodo={this.addTodo}/>
+            <Todo todos={this.state.todos}
+            markComplete={this.markCompleted}
+            deleteTodoItem={this.deleteTodoItem}
+            />
+          </React.Fragment>)}/>
+           {/* todos is property like attribute in html element */}{/* rce */}
+        <Route path="/about" component={About}  />
 
       </div>
+      </Router>
     );
   }
 }

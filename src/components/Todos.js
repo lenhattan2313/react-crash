@@ -19,7 +19,10 @@ class Todos extends React.Component {
 }
 //Prototype like validation
 Todos.protoType = {
-    todos: PropTypes.array.isRequired
+    todos: PropTypes.array.isRequired,
+    markComplete: PropTypes.func.isRequired,
+    deleteTodoItem: PropTypes.func.isRequired
+
 }
 
 export default Todos;
